@@ -1,0 +1,7 @@
+﻿# comment lines start with #
+JBA Comdty;JGBs
+# EJ589900 Corp;JGB 5-Yr
+# EI269554 Corp;JGB 7-Yr
+# EJ580150 Corp;JGB 10-Yr
+# EJ593960 Corp;JGB 20-Yr
+# EJ586107 Corp;JGB 30-Yr

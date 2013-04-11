@@ -1,0 +1,1 @@
+﻿LookbackMin;20

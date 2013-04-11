@@ -1,0 +1,20 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Transposer", "Transposer\Transposer.csproj", "{AE834D32-DBB6-4ACC-AB27-0A378FB12486}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{AE834D32-DBB6-4ACC-AB27-0A378FB12486}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AE834D32-DBB6-4ACC-AB27-0A378FB12486}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AE834D32-DBB6-4ACC-AB27-0A378FB12486}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AE834D32-DBB6-4ACC-AB27-0A378FB12486}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
