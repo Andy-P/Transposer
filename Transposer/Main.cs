@@ -18,16 +18,19 @@ namespace Transposer
         private const string ParamsPath = "Parameters.txt";
 
         private Dictionary<string, string> _parameters = new Dictionary<string, string>();
-        private readonly List<BloombergSecurity> _securities = new List<BloombergSecurity>() ;
-
-        DataTable _transposerTable = new DataTable();
+        private readonly List<BloombergSecurity> _securities = new List<BloombergSecurity>();
+        private List<string> Fields = new List<string>();
+        private DataTable _transposerTable = new DataTable();
+        private BloombergRealTimeData _bloombergRealTimeData = new BloombergRealTimeData(); 
 
         public Main()
         {
             InitializeComponent();
             LoadParamsFromTextFile();
+            SetFields();
             InitializeDataGrid();
             InitializeSymbols();
+            _bloombergRealTimeData.SendRequest();
         }
 
         #region Initialization
@@ -45,7 +48,7 @@ namespace Transposer
             FormatDatagrid();
         }
 
-        private static DataTable FormatDataTable()
+        private DataTable FormatDataTable()
         {
             var transposerTable = new DataTable();
 
@@ -55,11 +58,18 @@ namespace Transposer
             var name = transposerTable.Columns.Add("Name", typeof(string));
             name.Unique = true;
 
-            transposerTable.Columns.Add("Mid", typeof(double));
-            transposerTable.Columns.Add("Bid", typeof(double));
-            transposerTable.Columns.Add("Ask", typeof(double));
+            foreach (var field in Fields)
+            {
+                transposerTable.Columns.Add(field, typeof(double));
+            }
 
             return transposerTable;
+        }
+
+        private void SetFields()
+        {
+            Fields = new List<string>() { "Mid", "Bid", "Ask", "Last_Price" };
+
         }
 
         private void FormatDatagrid()
@@ -73,9 +83,10 @@ namespace Transposer
             dataGridViewTrnspsr.Columns[2].ReadOnly = true;
             dataGridViewTrnspsr.Columns[3].ReadOnly = true;
             dataGridViewTrnspsr.Columns[4].ReadOnly = true;
+            dataGridViewTrnspsr.Columns[5].ReadOnly = true;
 
-            dataGridViewTrnspsr.Columns[3].Visible = false;
-            dataGridViewTrnspsr.Columns[4].Visible = false;
+            //dataGridViewTrnspsr.Columns[3].Visible = false;
+            //dataGridViewTrnspsr.Columns[4].Visible = false;
 
             CorrectWindowSize();
         }
@@ -98,10 +109,14 @@ namespace Transposer
 
         private void InitializeSymbols()
         {
-            foreach (DataRow row in _transposerTable.Rows)
+            //dataGridViewTrnspsr.Rows
+            for (int i = 0; i < dataGridViewTrnspsr.Rows.Count; i++)
             {
-                var security = new BloombergSecurity(row);
+                DataGridViewRow dataGridrow = dataGridViewTrnspsr.Rows[i];
+                DataRow dataRow = _transposerTable.Rows[i];
+                var security = new BloombergSecurity(dataGridrow, dataRow, Fields);
                 _securities.Add(security);
+                _bloombergRealTimeData.AddSecurity(security);
             }
         }
 
@@ -162,10 +177,13 @@ namespace Transposer
                 foreach (DataGridViewRow rows in dgv.Rows)
                     if (rows.Visible == true)
                         width += rows.Height;
-                return width += 20;
+                return width += 44;
             }
         }
 
         #endregion
+
+
+
     }
 }

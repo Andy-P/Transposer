@@ -29,7 +29,10 @@
         private void InitializeComponent()
         {
             this.dataGridViewTrnspsr = new System.Windows.Forms.DataGridView();
+            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+            this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewTrnspsr)).BeginInit();
+            this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // dataGridViewTrnspsr
@@ -41,15 +44,32 @@
             this.dataGridViewTrnspsr.Location = new System.Drawing.Point(0, 0);
             this.dataGridViewTrnspsr.Name = "dataGridViewTrnspsr";
             this.dataGridViewTrnspsr.ReadOnly = true;
-            this.dataGridViewTrnspsr.Size = new System.Drawing.Size(190, 128);
+            this.dataGridViewTrnspsr.Size = new System.Drawing.Size(305, 301);
             this.dataGridViewTrnspsr.TabIndex = 0;
+            // 
+            // statusStrip1
+            // 
+            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripStatusLabel1});
+            this.statusStrip1.Location = new System.Drawing.Point(0, 279);
+            this.statusStrip1.Name = "statusStrip1";
+            this.statusStrip1.Size = new System.Drawing.Size(305, 22);
+            this.statusStrip1.TabIndex = 1;
+            this.statusStrip1.Text = "statusStrip1";
+            // 
+            // toolStripStatusLabel1
+            // 
+            this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
+            this.toolStripStatusLabel1.Size = new System.Drawing.Size(61, 17);
+            this.toolStripStatusLabel1.Text = "Initializing";
             // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
-            this.ClientSize = new System.Drawing.Size(190, 128);
+            this.ClientSize = new System.Drawing.Size(305, 301);
+            this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.dataGridViewTrnspsr);
             this.MaximizeBox = false;
             this.Name = "Main";
@@ -57,13 +77,18 @@
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.Text = "Transposer";
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewTrnspsr)).EndInit();
+            this.statusStrip1.ResumeLayout(false);
+            this.statusStrip1.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
         #endregion
 
         private System.Windows.Forms.DataGridView dataGridViewTrnspsr;
+        private System.Windows.Forms.StatusStrip statusStrip1;
+        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
     }
 }
 
