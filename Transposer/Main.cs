@@ -80,10 +80,15 @@ namespace Transposer
 
             dataGridViewTrnspsr.Columns[0].ReadOnly = true;
             dataGridViewTrnspsr.Columns[1].ReadOnly = true;
+
             dataGridViewTrnspsr.Columns[2].ReadOnly = true;
+            dataGridViewTrnspsr.Columns[2].DefaultCellStyle.Format = "#.00##";
             dataGridViewTrnspsr.Columns[3].ReadOnly = true;
+            dataGridViewTrnspsr.Columns[3].DefaultCellStyle.Format = "#.00##";
             dataGridViewTrnspsr.Columns[4].ReadOnly = true;
+            dataGridViewTrnspsr.Columns[4].DefaultCellStyle.Format = "#.00##";
             dataGridViewTrnspsr.Columns[5].ReadOnly = true;
+            dataGridViewTrnspsr.Columns[5].DefaultCellStyle.Format = "#.00##";
 
             //dataGridViewTrnspsr.Columns[3].Visible = false;
             //dataGridViewTrnspsr.Columns[4].Visible = false;

@@ -62,7 +62,7 @@ namespace Transposer
 
         private void UseDfltFields()
         {
-            _fields = new List<string> { "security", "ASK", "LAST_PRICE", "BID" };
+            _fields = new List<string> { "Security", "ASK", "LAST_PRICE", "BID"};
         }
 
         public void SetFields(List<string> fields)
@@ -196,7 +196,7 @@ namespace Transposer
                     // process tick data
                     for (int fieldIndex = 1; fieldIndex < securityObj.SecurityFields.Count; fieldIndex++)
                     {
-                        string field = securityObj.SecurityFields[fieldIndex];
+                        string field = securityObj.SecurityFields[fieldIndex].ToUpper();
                         if (msg.HasElement(field))
                         {
                             //msg.GetElementAsDatetime(Element.)
@@ -204,7 +204,7 @@ namespace Transposer
                             if (!msg.GetElement(field).IsNull)
                             {
                                 string value = msg.GetElementAsString(field);
-                                securityObj.Setfield(field, value);
+                                securityObj.Setfield(securityObj.SecurityFields[fieldIndex], value);
                             }
                         }
                     }
