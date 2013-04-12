@@ -21,7 +21,8 @@ namespace Transposer
         private readonly List<BloombergSecurity> _securities = new List<BloombergSecurity>();
         private List<string> Fields = new List<string>();
         private DataTable _transposerTable = new DataTable();
-        private BloombergRealTimeData _bloombergRealTimeData = new BloombergRealTimeData(); 
+        private BloombergRealTimeData _bloombergRealTimeData = new BloombergRealTimeData();
+        public DataGridView DataGridViewTrnspsr;
 
         public Main()
         {
@@ -30,7 +31,9 @@ namespace Transposer
             SetFields();
             InitializeDataGrid();
             InitializeSymbols();
+            InitTimer();
             _bloombergRealTimeData.SendRequest();
+            dataGridViewTrnspsr.Rows[1].DefaultCellStyle.BackColor = Color.Yellow;
         }
 
         #region Initialization
@@ -42,6 +45,7 @@ namespace Transposer
 
         private void InitializeDataGrid()
         {
+            DataGridViewTrnspsr = dataGridViewTrnspsr;
             _transposerTable = FormatDataTable();
             AddSymbols(_transposerTable);
             dataGridViewTrnspsr.DataSource = _transposerTable;
@@ -63,13 +67,14 @@ namespace Transposer
                 transposerTable.Columns.Add(field, typeof(double));
             }
 
+            var diff = transposerTable.Columns.Add("Change", typeof(string));
+
             return transposerTable;
         }
 
         private void SetFields()
         {
-            Fields = new List<string>() { "Mid", "Bid", "Ask", "Last_Price" };
-
+            Fields = new List<string>() { "Mid", "Bid", "Ask" };
         }
 
         private void FormatDatagrid()
@@ -79,7 +84,10 @@ namespace Transposer
             dataGridViewTrnspsr.RowHeadersVisible = false;
 
             dataGridViewTrnspsr.Columns[0].ReadOnly = true;
+            dataGridViewTrnspsr.Columns[0].DefaultCellStyle.BackColor = Color.LightGray;
             dataGridViewTrnspsr.Columns[1].ReadOnly = true;
+            //dataGridViewTrnspsr.Columns[1].DefaultCellStyle.BackColor = Color.LightGray;
+
 
             dataGridViewTrnspsr.Columns[2].ReadOnly = true;
             dataGridViewTrnspsr.Columns[2].DefaultCellStyle.Format = "#.00##";
@@ -88,10 +96,11 @@ namespace Transposer
             dataGridViewTrnspsr.Columns[4].ReadOnly = true;
             dataGridViewTrnspsr.Columns[4].DefaultCellStyle.Format = "#.00##";
             dataGridViewTrnspsr.Columns[5].ReadOnly = true;
-            dataGridViewTrnspsr.Columns[5].DefaultCellStyle.Format = "#.00##";
+            dataGridViewTrnspsr.Columns[5].DefaultCellStyle.Format = "#.0000";
 
-            //dataGridViewTrnspsr.Columns[3].Visible = false;
-            //dataGridViewTrnspsr.Columns[4].Visible = false;
+            dataGridViewTrnspsr.Columns[0].Visible = false;
+            dataGridViewTrnspsr.Columns[3].Visible = false;
+            dataGridViewTrnspsr.Columns[4].Visible = false;
 
             CorrectWindowSize();
         }
@@ -119,7 +128,7 @@ namespace Transposer
             {
                 DataGridViewRow dataGridrow = dataGridViewTrnspsr.Rows[i];
                 DataRow dataRow = _transposerTable.Rows[i];
-                var security = new BloombergSecurity(dataGridrow, dataRow, Fields);
+                var security = new BloombergSecurity(dataGridrow, dataRow, Fields, this);
                 _securities.Add(security);
                 _bloombergRealTimeData.AddSecurity(security);
             }
@@ -152,6 +161,19 @@ namespace Transposer
             }
 
             return parsedText;
+        }
+
+        private void InitTimer()
+        {
+            //Instantiate the timer
+            timer1 = new Timer();
+            // Setup timer
+            timer1.Interval = 1000; //1000ms = 1sec
+            foreach (var bloombergSecurity in _securities)
+            {
+                bloombergSecurity.IntiTimer(timer1);
+            }
+            timer1.Start();
         }
 
         #endregion
