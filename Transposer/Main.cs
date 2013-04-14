@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 //using System.ComponentModel;
+using System.ComponentModel;
 using System.Data;
 //using System.Drawing;
 //using System.Linq;
@@ -16,6 +17,7 @@ namespace Transposer
     {
         private const string SymbolPath = "Symbols.txt";
         private const string ParamsPath = "Parameters.txt";
+        private const string bckClrCol = "Highlight";
 
         private Dictionary<string, string> _parameters = new Dictionary<string, string>();
         private readonly List<BloombergSecurity> _securities = new List<BloombergSecurity>();
@@ -33,7 +35,7 @@ namespace Transposer
             InitializeSymbols();
             InitTimer();
             _bloombergRealTimeData.SendRequest();
-            dataGridViewTrnspsr.Rows[1].DefaultCellStyle.BackColor = Color.Yellow;
+
         }
 
         #region Initialization
@@ -48,8 +50,50 @@ namespace Transposer
             DataGridViewTrnspsr = dataGridViewTrnspsr;
             _transposerTable = FormatDataTable();
             AddSymbols(_transposerTable);
-            dataGridViewTrnspsr.DataSource = _transposerTable;
+
+            var bindingSource1 = new BindingSource {DataSource = _transposerTable};
+            dataGridViewTrnspsr.DataSource = bindingSource1;
+            bindingSource1.ListChanged += new ListChangedEventHandler(bindingSource1_ListChanged); 
+
+
             FormatDatagrid();
+        }
+
+        public void bindingSource1_ListChanged(object sender, ListChangedEventArgs e)
+        {
+            if (String.Equals(e.PropertyDescriptor.Name,bckClrCol))
+            {
+                int direction;
+                var cellStyle = new DataGridViewCellStyle();
+                int.TryParse(_transposerTable.Rows[e.NewIndex][bckClrCol].ToString(), out direction);
+                if (direction < 0)
+                {
+                    cellStyle.BackColor = Color.Red;
+                    for (int i = 0; i < dataGridViewTrnspsr.Columns.Count; i++)
+                    {
+                        dataGridViewTrnspsr.Rows[e.NewIndex].Cells[i].Style = cellStyle;
+                    }
+                }
+                else
+                {
+                    if (direction > 0)
+                    {
+                        cellStyle.BackColor = Color.LawnGreen;
+                        for (int i = 0; i < dataGridViewTrnspsr.Columns.Count; i++)
+                        {
+                            dataGridViewTrnspsr.Rows[e.NewIndex].Cells[i].Style = cellStyle;
+                        }
+                    }
+                    else
+                    {
+                        cellStyle.BackColor = Color.White;
+                        for (int i = 0; i < dataGridViewTrnspsr.Columns.Count; i++)
+                        {
+                            dataGridViewTrnspsr.Rows[e.NewIndex].Cells[i].Style = cellStyle;
+                        }
+                    }
+                }
+            }
         }
 
         private DataTable FormatDataTable()
@@ -67,7 +111,8 @@ namespace Transposer
                 transposerTable.Columns.Add(field, typeof(double));
             }
 
-            var diff = transposerTable.Columns.Add("Change", typeof(string));
+            var change = transposerTable.Columns.Add("Change", typeof(string));
+            var highlight = transposerTable.Columns.Add(bckClrCol, typeof(int));
 
             return transposerTable;
         }
@@ -86,7 +131,6 @@ namespace Transposer
             dataGridViewTrnspsr.Columns[0].ReadOnly = true;
             dataGridViewTrnspsr.Columns[0].DefaultCellStyle.BackColor = Color.LightGray;
             dataGridViewTrnspsr.Columns[1].ReadOnly = true;
-            //dataGridViewTrnspsr.Columns[1].DefaultCellStyle.BackColor = Color.LightGray;
 
 
             dataGridViewTrnspsr.Columns[2].ReadOnly = true;
@@ -101,6 +145,8 @@ namespace Transposer
             dataGridViewTrnspsr.Columns[0].Visible = false;
             dataGridViewTrnspsr.Columns[3].Visible = false;
             dataGridViewTrnspsr.Columns[4].Visible = false;
+            dataGridViewTrnspsr.Columns[6].Visible = false;
+
 
             CorrectWindowSize();
         }
@@ -166,14 +212,43 @@ namespace Transposer
         private void InitTimer()
         {
             //Instantiate the timer
-            timer1 = new Timer();
-            // Setup timer
-            timer1.Interval = 1000; //1000ms = 1sec
             foreach (var bloombergSecurity in _securities)
             {
+                timer1 = new Timer();
+                timer1.Interval = 100; //1000ms = 1sec
                 bloombergSecurity.IntiTimer(timer1);
+                timer1.Start();
             }
-            timer1.Start();
+
+            timer2 = new Timer();
+            timer2.Interval = new Random().Next(4000, 7000); //1000ms = 1sec
+            _securities[0].IntiTimer2(timer2);
+            timer2.Start();
+
+            timer2 = new Timer();
+            timer2.Interval = new Random().Next(4000, 7500); //1000ms = 1sec
+            _securities[1].IntiTimer2(timer2);
+            timer2.Start();
+
+            timer2 = new Timer();
+            timer2.Interval = new Random().Next(4000, 8000); //1000ms = 1sec
+            _securities[2].IntiTimer2(timer2);
+            timer2.Start();
+
+            timer2 = new Timer();
+            timer2.Interval = new Random().Next(4000, 8100); //1000ms = 1sec
+            _securities[3].IntiTimer2(timer2);
+            timer2.Start();
+
+            timer2 = new Timer();
+            timer2.Interval = new Random().Next(4000, 8200); //1000ms = 1sec
+            _securities[4].IntiTimer2(timer2);
+            timer2.Start();
+
+            timer2 = new Timer();
+            timer2.Interval = new Random().Next(4000, 8300); //1000ms = 1sec
+            _securities[5].IntiTimer2(timer2);
+            timer2.Start();
         }
 
         #endregion
@@ -209,6 +284,7 @@ namespace Transposer
         }
 
         #endregion
+
 
 
 

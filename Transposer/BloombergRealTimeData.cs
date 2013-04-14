@@ -90,7 +90,7 @@ namespace Transposer
             {
                 //toolStripStatusLabel1.Text = "Connecting...";
                 // create new session
-                _session = new Session(_sessionOptions, new EventHandler(processEvent));
+                _session = new Session(_sessionOptions, new EventHandler(ProcessEvent));
             }
             return _session.Start();
         }
@@ -134,7 +134,7 @@ namespace Transposer
         /// </summary>
         /// <param name="eventObj"></param>
         /// <param name="session"></param>
-        private void processEvent(Event eventObj, Session session)
+        private void ProcessEvent(Event eventObj, Session session)
         {
             //if (InvokeRequired)
             //{
@@ -155,14 +155,14 @@ namespace Transposer
                 {
                     case Event.EventType.SUBSCRIPTION_DATA:
                         // process subscription data
-                        processRequestDataEvent(eventObj, session);
+                        ProcessRequestDataEvent(eventObj, session);
                         break;
                     case Event.EventType.SUBSCRIPTION_STATUS:
                         // process subscription status
-                        processRequestStatusEvent(eventObj, session);
+                        ProcessRequestStatusEvent(eventObj, session);
                         break;
                     default:
-                        processMiscEvents(eventObj, session);
+                        ProcessMiscEvents(eventObj, session);
                         break;
                 }
             }
@@ -173,7 +173,7 @@ namespace Transposer
             //}
         }
 
-        private void processRequestDataEvent(Event eventObj, Session session)
+        private static void ProcessRequestDataEvent(Event eventObj, Session session)
         {
             // process message
             foreach (Message msg in eventObj)
@@ -219,7 +219,7 @@ namespace Transposer
         /// </summary>
         /// <param name="eventObj"></param>
         /// <param name="session"></param>
-        private void processRequestStatusEvent(Event eventObj, Session session)
+        private static void ProcessRequestStatusEvent(Event eventObj, Session session)
         {
             List<string> dataList = new List<string>();
             // process status message
@@ -287,7 +287,7 @@ namespace Transposer
         /// </summary>
         /// <param name="eventObj"></param>
         /// <param name="session"></param>
-        private void processMiscEvents(Event eventObj, Session session)
+        private static void ProcessMiscEvents(Event eventObj, Session session)
         {
             foreach (Message msg in eventObj)
             {

@@ -18,7 +18,7 @@ namespace Transposer
         private DateTime LastBackColorChg = DateTime.Now;
         private bool backColorNeedsCheck = false;
         private Color DefltBackgroundColor;
-        private double HighlightTimeInMillisecs = 3000;
+        private double HighlightTimeInsecs = 3;
 
         private double _ask;
         private bool _prevAskInit;
@@ -116,6 +116,11 @@ namespace Transposer
             timer1.Tick += new EventHandler(timer1_Tick);
         }
 
+        public void IntiTimer2(Timer timer2)
+        {
+            //Instantiate the timer
+            timer2.Tick += new EventHandler(timer2_Tick);
+        }
         public void Setfield(String field, string value)
         {
             SecurityData[field] = value;
@@ -139,13 +144,13 @@ namespace Transposer
             SecurityData["Change"] = Change;
             if (Change < 0)
             {
-                HighlightBackColor(true);
+                HighlightBackColor(false);
             }
             else
             {
                 if (Change > 0)
                 {
-                    HighlightBackColor(false);
+                    HighlightBackColor(true);
                 }
             }
         }
@@ -154,11 +159,11 @@ namespace Transposer
         {
             if (isUp)
             {
-                DataGridRow.DefaultCellStyle.BackColor = Color.LightGreen;
+                SecurityData["Highlight"] = 1;
             }
             else
             {
-                DataGridRow.DefaultCellStyle.BackColor = Color.PaleVioletRed;
+                SecurityData["Highlight"] = -1;
             }
             LastBackColorChg = DateTime.Now;
             backColorNeedsCheck = true;
@@ -170,14 +175,20 @@ namespace Transposer
             {
 
                 //Console.WriteLine("{0} needs check",Name);
-                TimeSpan timeSinceChange = DateTime.Now - LastBackColorChg;
-                if (timeSinceChange.Milliseconds >= HighlightTimeInMillisecs)
+                var timeSinceChange = DateTime.Now - LastBackColorChg;
+                if (timeSinceChange.Seconds >= HighlightTimeInsecs)
                 {
                     backColorNeedsCheck = false;
-                    DataGridRow.DefaultCellStyle.BackColor = DefltBackgroundColor;
+                    SecurityData["Highlight"] = 0;
                 }
-                
+
             }
+        }
+        private void timer2_Tick(object sender, EventArgs e)
+        {
+            var rnd = new Random();
+            int bias = rnd.Next(-2, 2);
+            Change = bias;
         }
     }
 }
