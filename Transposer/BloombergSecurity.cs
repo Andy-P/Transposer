@@ -25,7 +25,6 @@ namespace Transposer
         private double _bid;
         private bool _prevBidInit;
         private double _mid;
-        private double _prevMid;
         private bool _prevMidInit;
         private double _chg;
 
@@ -66,24 +65,25 @@ namespace Transposer
             {
                 if (_prevMidInit)
                 {
-                    PrevMid = _mid;
+                    // if the new value for mid is different from the prev mid
+                    if (Math.Abs(PrevMid - value) > 1E-14)
+                    {
+                        PrevMid = _mid;
+                        _mid = value;
+                        UpdateMid();
+                        Change = _mid - PrevMid;
+                    }
                 }
                 else
                 {
-                    PrevMid = value;
+                    _mid = value;
+                    PrevMid = _mid;
                     _prevMidInit = true;
                 }
-                _mid = value;
-                UpdateMid();
-                Change = _mid - PrevMid;
             }
         }
 
-        public double PrevMid
-        {
-            get { return _prevMid; }
-            private set { _prevMid = value; }
-        }
+        public double PrevMid { get; private set; }
 
         public double Change
         {
@@ -118,9 +118,10 @@ namespace Transposer
 
         public void IntiTimer2(Timer timer2)
         {
-            //Instantiate the timer
+            // Instantiate this timer for testing only
             timer2.Tick += new EventHandler(timer2_Tick);
         }
+
         public void Setfield(String field, string value)
         {
             SecurityData[field] = value;
@@ -173,21 +174,19 @@ namespace Transposer
         {
             if (backColorNeedsCheck)
             {
-
-                //Console.WriteLine("{0} needs check",Name);
                 var timeSinceChange = DateTime.Now - LastBackColorChg;
                 if (timeSinceChange.Seconds >= HighlightTimeInsecs)
                 {
                     backColorNeedsCheck = false;
                     SecurityData["Highlight"] = 0;
                 }
-
             }
         }
+        
         private void timer2_Tick(object sender, EventArgs e)
         {
             var rnd = new Random();
-            int bias = rnd.Next(-2, 2);
+            int bias = rnd.Next(-10, 10);
             Change = bias;
         }
     }

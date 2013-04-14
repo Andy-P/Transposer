@@ -3,7 +3,7 @@ using System.Collections.Generic;
 //using System.ComponentModel;
 using System.ComponentModel;
 using System.Data;
-//using System.Drawing;
+using System.Drawing;
 //using System.Linq;
 //using System.Text;
 //using System.Threading.Tasks;
@@ -17,7 +17,7 @@ namespace Transposer
     {
         private const string SymbolPath = "Symbols.txt";
         private const string ParamsPath = "Parameters.txt";
-        private const string bckClrCol = "Highlight";
+        private const string BckClrCol = "Highlight";
 
         private Dictionary<string, string> _parameters = new Dictionary<string, string>();
         private readonly List<BloombergSecurity> _securities = new List<BloombergSecurity>();
@@ -35,6 +35,9 @@ namespace Transposer
             InitializeSymbols();
             InitTimer();
             _bloombergRealTimeData.SendRequest();
+
+            //ColorConverter c = new ColorConverter();
+            //c.ConvertFromString("Blue");
 
         }
 
@@ -61,11 +64,11 @@ namespace Transposer
 
         public void bindingSource1_ListChanged(object sender, ListChangedEventArgs e)
         {
-            if (String.Equals(e.PropertyDescriptor.Name,bckClrCol))
+            if (String.Equals(e.PropertyDescriptor.Name,BckClrCol))
             {
                 int direction;
                 var cellStyle = new DataGridViewCellStyle();
-                int.TryParse(_transposerTable.Rows[e.NewIndex][bckClrCol].ToString(), out direction);
+                int.TryParse(_transposerTable.Rows[e.NewIndex][BckClrCol].ToString(), out direction);
                 if (direction < 0)
                 {
                     cellStyle.BackColor = Color.Red;
@@ -112,7 +115,7 @@ namespace Transposer
             }
 
             var change = transposerTable.Columns.Add("Change", typeof(string));
-            var highlight = transposerTable.Columns.Add(bckClrCol, typeof(int));
+            var highlight = transposerTable.Columns.Add(BckClrCol, typeof(int));
 
             return transposerTable;
         }
@@ -124,7 +127,7 @@ namespace Transposer
 
         private void FormatDatagrid()
         {
-
+            
             dataGridViewTrnspsr.ScrollBars = ScrollBars.Horizontal;
             dataGridViewTrnspsr.RowHeadersVisible = false;
 
@@ -221,32 +224,32 @@ namespace Transposer
             }
 
             timer2 = new Timer();
-            timer2.Interval = new Random().Next(4000, 7000); //1000ms = 1sec
+            timer2.Interval = new Random().Next(5000, 7000); //1000ms = 1sec
             _securities[0].IntiTimer2(timer2);
             timer2.Start();
 
             timer2 = new Timer();
-            timer2.Interval = new Random().Next(4000, 7500); //1000ms = 1sec
+            timer2.Interval = new Random().Next(5000, 7500); //1000ms = 1sec
             _securities[1].IntiTimer2(timer2);
             timer2.Start();
 
             timer2 = new Timer();
-            timer2.Interval = new Random().Next(4000, 8000); //1000ms = 1sec
+            timer2.Interval = new Random().Next(5000, 8000); //1000ms = 1sec
             _securities[2].IntiTimer2(timer2);
             timer2.Start();
 
             timer2 = new Timer();
-            timer2.Interval = new Random().Next(4000, 8100); //1000ms = 1sec
+            timer2.Interval = new Random().Next(5000, 8500); //1000ms = 1sec
             _securities[3].IntiTimer2(timer2);
             timer2.Start();
 
             timer2 = new Timer();
-            timer2.Interval = new Random().Next(4000, 8200); //1000ms = 1sec
+            timer2.Interval = new Random().Next(5000, 9000); //1000ms = 1sec
             _securities[4].IntiTimer2(timer2);
             timer2.Start();
 
             timer2 = new Timer();
-            timer2.Interval = new Random().Next(4000, 8300); //1000ms = 1sec
+            timer2.Interval = new Random().Next(5000, 9500); //1000ms = 1sec
             _securities[5].IntiTimer2(timer2);
             timer2.Start();
         }
