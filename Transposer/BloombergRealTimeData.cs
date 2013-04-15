@@ -149,8 +149,8 @@ namespace Transposer
             //}
             //else
             //{
-            try
-            {
+            //try
+            //{
                 switch (eventObj.Type)
                 {
                     case Event.EventType.SUBSCRIPTION_DATA:
@@ -165,11 +165,11 @@ namespace Transposer
                         ProcessMiscEvents(eventObj, session);
                         break;
                 }
-            }
-            catch (System.Exception e)
-            {
-                //toolStripStatusLabel1.Text = e.Message.ToString();
-            }
+            //}
+            //catch (System.Exception e)
+            //{
+            //    //toolStripStatusLabel1.Text = e.Message.ToString();
+            //}
             //}
         }
 
@@ -236,8 +236,8 @@ namespace Transposer
                     {
                         cell.Style.BackColor = Color.LightGreen;
                     }
-                    try
-                    {
+                    //try
+                    //{
                         // check for error
                         if (msg.HasElement("exceptions"))
                         {
@@ -260,11 +260,11 @@ namespace Transposer
                                 //}
                             }
                         }
-                    }
-                    catch (Exception e)
-                    {
-                        //toolStripStatusLabel1.Text = e.Message;
-                    }
+                    //}
+                    //catch (Exception e)
+                    //{
+                    //    //toolStripStatusLabel1.Text = e.Message;
+                    //}
                 }
                 else
                 {
