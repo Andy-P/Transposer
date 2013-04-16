@@ -17,7 +17,20 @@ namespace Transposer
         private List<TransposedSecurity> _transposedSecurity = new List<TransposedSecurity>();
         private DateTime _lastBackColorChg = DateTime.Now;
         private bool _backColorNeedsCheck;
-        private const double HighlightTimeInsecs = 4;
+
+        public int HighlightTimeInSecs
+        {
+            get { return _highlightTimeInSecs; }
+            set
+            {
+                if (value > 1)
+                    _highlightTimeInSecs = value;
+                else
+                    _highlightTimeInSecs = 4;
+            }
+        }
+
+        public double HighlightTimeInsecs = 4;
 
         private double _ask;
         private bool _prevAskInit;
@@ -28,6 +41,7 @@ namespace Transposer
         private bool _prevMidInit;
         private double _chg;
         private double _prevMid;
+        private int _highlightTimeInSecs;
 
         public double Ask
         {
@@ -46,7 +60,6 @@ namespace Transposer
                         double tempMid = Math.Round((_bid + _ask)/2, 6);
                         if (tempMid != Mid) Mid = tempMid;
                     }
-                    //Mid =  Math.Round((_bid + _ask)/2,6);
                 }
             }
         }

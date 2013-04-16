@@ -13,24 +13,27 @@ namespace Transposer
         private const string SymbolPath = "Symbols.txt";
         private const string ParamsPath = "Parameters.txt";
         private const string BckClrCol = "Highlight";
-        private const int Lookback = 200;
         private int _dataGridColCnt;
 
-        private Dictionary<string, string> _parameters = new Dictionary<string, string>();
         private readonly List<BloombergSecurity> _securities = new List<BloombergSecurity>();
         private List<string> _fields = new List<string>();
         private DataTable _transposerTable = new DataTable();
         private readonly BloombergRealTimeData _bloombergRealTimeData = new BloombergRealTimeData();
         public DataGridView DataGridViewTrnspsr;
 
+        // parameters
+        private int _lookback;
+        private Color _upChgColor;
+        private Color _downChgColor;
+        private Color _dlfColor;
+        private int _highlightTimeInSecs;
 
         delegate void SetTextCallback(object sender, ListChangedEventArgs e);
 
         public Main()
         {
             InitializeComponent();
-            LoadParamsFromTextFile();
-            SetFields();
+            InitParams();
             InitializeDataGrid();
             InitializeSymbols();
             InitTimer();
@@ -43,9 +46,12 @@ namespace Transposer
 
         #region Initialization
 
-        private void LoadParamsFromTextFile()
+        private void InitParams()
         {
-            _parameters = ReadAndParseTextFile(ParamsPath);
+            LoadDefaultParams();
+            var parameters = ReadAndParseTextFile(ParamsPath);
+            if (parameters != null && parameters.Count > 0) SetParameters(parameters);
+            SetFields();
         }
 
         private void InitializeDataGrid()
@@ -79,7 +85,7 @@ namespace Transposer
             }
             else
             {
-                if (String.Equals(e.PropertyDescriptor.Name, BckClrCol))
+                if (e != null && String.Equals(e.PropertyDescriptor.Name, BckClrCol))
                 {
                     int direction;
                     if (int.TryParse(_transposerTable.Rows[e.NewIndex][BckClrCol].ToString(), out direction))
@@ -87,9 +93,9 @@ namespace Transposer
                         var cellStyle = new DataGridViewCellStyle();
 
                         if (direction < 0)
-                            cellStyle.BackColor = Color.Red;
+                            cellStyle.BackColor = _downChgColor;
                         else
-                            cellStyle.BackColor = direction > 0 ? Color.LawnGreen : Color.White;
+                            cellStyle.BackColor = direction > 0 ? _upChgColor : _dlfColor;
 
                         for (int i = 0; i < _dataGridColCnt; i++)
                             dataGridViewTrnspsr.Rows[e.NewIndex].Cells[i].Style = cellStyle;
@@ -188,16 +194,26 @@ namespace Transposer
                 _securities.Add(sec);
                 _bloombergRealTimeData.AddSecurity(sec);
                 securityBase.AddTransposedSecurity(sec);
-                sec.LookBack = Lookback;
+                sec.LookBack = _lookback;
+                sec.HighlightTimeInSecs = _highlightTimeInSecs;
             }
+        }
+
+        private void LoadDefaultParams()
+        {
+            _lookback = 100;
+            _upChgColor = Color.LawnGreen;
+            _downChgColor = Color.Red;
+            _dlfColor = Color.White;
+            _highlightTimeInSecs = 4;
         }
 
         private Dictionary<string, string> ReadAndParseTextFile(string path)
         {
             var parsedText = new Dictionary<string, string>();
 
-            //try
-            //{
+            try
+            {
                 using (var sr = new StreamReader(path))
                 {
                     string line;
@@ -211,14 +227,44 @@ namespace Transposer
                         }
                     }
                 }
-            //}
-            //catch (Exception e)
-            //{
-            //    Console.WriteLine(@"The file could not be read:");
-            //    Console.WriteLine(e.Message);
-            //}
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(@"The file could not be read:");
+                Console.WriteLine(e.Message);
+            }
 
             return parsedText;
+        }
+
+        private void SetParameters(Dictionary<string, string> parameters)
+        {
+            foreach (var parameter in parameters)
+            {
+                switch (parameter.Key)
+                {
+                    case "Lookback":
+                        int lb;
+                        if (int.TryParse(parameter.Value, out lb))
+                        {
+                            if (lb > 2) 
+                                _lookback = lb;
+                        }
+                        break;
+                    case "HighlightTimeInSecs":
+                        int timeInSecs;
+                        if (int.TryParse(parameter.Value, out timeInSecs))
+                        {
+                            if (timeInSecs > 0 && timeInSecs < 120) 
+                                _highlightTimeInSecs = timeInSecs;
+                        }
+                        break;
+                    default:
+                        Console.WriteLine(@"Bad Parameter Key/Value pair '{0}' '{1}'", parameter.Key, parameter.Value);
+                        break;
+
+                }
+            }
         }
 
         private void InitTimer()

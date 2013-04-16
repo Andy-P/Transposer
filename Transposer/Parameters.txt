@@ -1,1 +1,2 @@
-﻿LookbackMin;20
+﻿Lookback;100
+HighlightTimeInSecs;5
