@@ -1,14 +1,14 @@
 ﻿# security's format is "Bloomberg Ticker ; Name to be displayed"
 # The first security is assumed to be the base security
 # all other security are assumed to be transposed into the first security
-JBA Comdty;JGB future
+JBA Comdty;JGB Future
 EJ589900 Corp;JGB 5-Yr
 EI269554 Corp;JGB 7-Yr
 EJ580150 Corp;JGB 10-Yr
 EJ593960 Corp;JGB 20-Yr
 EJ586107 Corp;JGB 30-Yr
-FVA Comdty;US 5-yr
-TYA Comdty;US 10-yr
-USA Comdty;US 30-yr
-USDJPY Curncy;Yen
-ESA Index;S&P
+# FVA Comdty;US 5-yr
+# TYA Comdty;US 10-yr
+# USA Comdty;US 30-yr
+# USDJPY Curncy;USDJPY
+# ESA Index;S&P

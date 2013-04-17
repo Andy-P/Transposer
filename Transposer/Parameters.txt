@@ -1,2 +1,3 @@
 ﻿Lookback;100
 HighlightTimeInSecs;5
+Precision;0.005
