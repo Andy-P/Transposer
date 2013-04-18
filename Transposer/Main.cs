@@ -28,9 +28,9 @@ namespace Transposer
         private Color _downChgColor;
         private Color _dlfColor;
         private int _highlightTimeInSecs;
-        private DataRow baseSymbolRow;
         private string baseSymbolName;
         private double _precision;
+        private bool _sortGrid;
 
         delegate void SetTextCallback(object sender, ListChangedEventArgs e);
 
@@ -91,9 +91,10 @@ namespace Transposer
             {
 
                 // sort by mid price
-                if (DataGridViewTrnspsr.Columns.Contains(SortCol)) 
-                    if (e.PropertyDescriptor != null && String.Equals(e.PropertyDescriptor.Name, SortCol))
-                    DataGridViewTrnspsr.Sort(DataGridViewTrnspsr.Columns[SortCol], ListSortDirection.Descending);
+                if (_sortGrid)
+                    if (DataGridViewTrnspsr.Columns.Contains(SortCol))
+                        if (e.PropertyDescriptor != null && String.Equals(e.PropertyDescriptor.Name, SortCol))
+                            DataGridViewTrnspsr.Sort(DataGridViewTrnspsr.Columns[SortCol], ListSortDirection.Descending);
 
                 if (dataGridViewTrnspsr != null)
                 {
@@ -210,7 +211,6 @@ namespace Transposer
             var securityBase = new BloombergSecurity(dataGridViewTrnspsr.Rows[0], _transposerTable.Rows[0], _fields);
             _securities.Add(securityBase);
             _bloombergRealTimeData.AddSecurity(securityBase);
-            baseSymbolRow = _transposerTable.Rows[0];
             baseSymbolName = _transposerTable.Rows[0][1].ToString().Trim();
             securityBase.HighlightTimeInSecs = _highlightTimeInSecs;
             securityBase.Precision = _precision;
